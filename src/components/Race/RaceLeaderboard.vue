@@ -1,7 +1,9 @@
 <script setup>
-import { useHorseStore } from "../../stores/use-horseData";
+import { computed } from "vue";
+import { useStore } from "vuex";
 
-const horseStore = useHorseStore();
+const store = useStore();
+const sortHorses = computed(() => store.state.sortHorses);
 </script>
 
 <template>
@@ -13,7 +15,7 @@ const horseStore = useHorseStore();
         <th>Name</th>
         <th>Time</th>
       </tr>
-      <tr v-for="(horse, index) in horseStore.sortHorses" :key="horse.id">
+      <tr v-for="(horse, index) in sortHorses" :key="horse.id">
         <td>{{ index + 1 }}</td>
         <td>
           <div

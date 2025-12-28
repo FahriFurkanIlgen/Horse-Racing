@@ -4,15 +4,15 @@
     <div class="controls">
       <button
         @click="generateHorses"
-        :disabled="horseStore.totalHorses.length > 0"
+        :disabled="store.state.totalHorses.length > 0"
       >
         Generate Horses
       </button>
       <button
         @click="generateSchedule"
         :disabled="
-          horseStore.totalHorses.length === 0 ||
-          horseStore.raceSchedule.length > 0
+          store.state.totalHorses.length === 0 ||
+          store.state.raceSchedule.length > 0
         "
       >
         Generate Race Schedule
@@ -20,17 +20,17 @@
       <button
         @click="startRace"
         :disabled="
-          horseStore.raceSchedule.length === 0 || horseStore.isRaceActive
+          store.state.raceSchedule.length === 0 || store.state.isRaceActive
         "
       >
         Start Race
       </button>
     </div>
-    <div class="horses" v-if="horseStore.totalHorses.length > 0">
-      <h2>Total Horses ({{ horseStore.totalHorses.length }})</h2>
+    <div class="horses" v-if="store.state.totalHorses.length > 0">
+      <h2>Total Horses ({{ store.state.totalHorses.length }})</h2>
       <div class="horse-list">
         <div
-          v-for="horse in horseStore.totalHorses"
+          v-for="horse in store.state.totalHorses"
           :key="horse.id"
           class="horse-item"
         >
@@ -42,10 +42,10 @@
         </div>
       </div>
     </div>
-    <div class="schedule" v-if="horseStore.raceSchedule.length > 0">
+    <div class="schedule" v-if="store.state.raceSchedule.length > 0">
       <h2>Race Schedule</h2>
       <div
-        v-for="round in horseStore.raceSchedule"
+        v-for="round in store.state.raceSchedule"
         :key="round.round"
         class="round"
       >
@@ -61,10 +61,10 @@
         </div>
       </div>
     </div>
-    <div class="results" v-if="horseStore.raceResults.length > 0">
+    <div class="results" v-if="store.state.raceResults.length > 0">
       <h2>Race Results</h2>
       <div
-        v-for="result in horseStore.raceResults"
+        v-for="result in store.state.raceResults"
         :key="result.round"
         class="result"
       >
@@ -83,29 +83,26 @@
         </div>
       </div>
     </div>
-    <div v-if="horseStore.isRaceActive && horseStore.currentRound > 0">
-      <router-link to="/play">Go to Race</router-link>
-    </div>
   </div>
 </template>
 
 <script setup>
-import { useHorseStore } from "../stores/use-horseData";
+import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 
-const horseStore = useHorseStore();
+const store = useStore();
 const router = useRouter();
 
 const generateHorses = () => {
-  horseStore.generateHorses();
+  store.dispatch("generateHorses");
 };
 
 const generateSchedule = () => {
-  horseStore.generateRaceSchedule();
+  store.dispatch("generateRaceSchedule");
 };
 
 const startRace = () => {
-  horseStore.startRace();
+  store.dispatch("startRace");
   router.push("/play");
 };
 </script>

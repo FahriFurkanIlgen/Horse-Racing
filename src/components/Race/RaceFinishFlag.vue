@@ -1,16 +1,18 @@
 <script setup>
 import { ref, watch } from "vue";
-import { useHorseStore } from "../../stores/use-horseData";
+import { useStore } from "vuex";
 
-const horseStore = useHorseStore();
+const store = useStore();
 
 const flag = ref();
 
 watch(
-  () => horseStore.getisRaceStarted,
+  () => store.getters.getisRaceStarted,
   () => {
-    if (horseStore.getisRaceStarted) {
+    if (store.getters.getisRaceStarted) {
+      // Race started
     } else {
+      // Race stopped
     }
   }
 );

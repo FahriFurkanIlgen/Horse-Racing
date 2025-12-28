@@ -1,19 +1,21 @@
 <script setup>
-import { onMounted, ref, computed, watch } from "vue";
+import { computed, watch } from "vue";
+import { useStore, mapState, mapGetters, mapActions } from "vuex";
 import RaceHorse from "./RaceHorse.vue";
 import RaceFinishFlag from "./RaceFinishFlag.vue";
-import { useHorseStore } from "../../stores/use-horseData";
 
-const horseStore = useHorseStore();
+const store = useStore();
 
-const horseList = computed(() => horseStore.currentRoundHorses);
-const { currentRound, nextRound, setLeaderBoard } = horseStore;
-
-const currentRoundLength = computed(
-  () => horseStore.raceSchedule[horseStore.currentRound - 1]?.length || 0
-);
+const horseList = computed(() => store.getters.currentRoundHorses);
+const currentRound = computed(() => store.state.currentRound);
+const currentRoundLength = computed(() => {
+  const round = store.state.raceSchedule[store.state.currentRound - 1];
+  return round ? round.length : 0;
+});
 
 const allFinished = computed(() => horseList.value.every((h) => h.isFinished));
+
+const setLeaderBoard = (val) => store.dispatch("setLeaderBoard", val);
 
 watch(allFinished, (newVal) => {
   if (newVal) {

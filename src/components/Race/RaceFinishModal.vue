@@ -1,20 +1,20 @@
 <script setup>
-import { ref, onMounted, computed } from "vue";
+import { computed } from "vue";
 import { useRouter } from "vue-router";
-import { useHorseStore } from "../../stores/use-horseData";
+import { useStore } from "vuex";
 import LeaderBoard from "./RaceLeaderboard.vue";
 import ButtonComp from "../Shared/Button.vue";
 
-const horseStore = useHorseStore();
+const store = useStore();
 const router = useRouter();
 
 const buttonData = computed(() => {
-  if (horseStore.currentRound === 6) {
+  if (store.state.currentRound === 6) {
     return [
       {
         text: "Go To Home",
         handler: () => {
-          horseStore.setLeaderBoard(false);
+          store.dispatch("setLeaderBoard", false);
           router.push("/");
         },
       },
@@ -24,8 +24,8 @@ const buttonData = computed(() => {
       {
         text: "Go To Next Round",
         handler: () => {
-          horseStore.setLeaderBoard(false);
-          horseStore.nextRound();
+          store.dispatch("setLeaderBoard", false);
+          store.dispatch("nextRound");
         },
       },
     ];
@@ -34,7 +34,7 @@ const buttonData = computed(() => {
 </script>
 
 <template>
-  <div v-if="horseStore.getLeaderBoard" class="modal">
+  <div v-if="store.getters.getLeaderBoard" class="modal">
     <div class="modal__layer"></div>
     <div class="modal__content">
       <h1 class="modal__content--title">LeaderBoard</h1>

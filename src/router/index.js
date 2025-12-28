@@ -1,5 +1,4 @@
 import { createRouter, createWebHistory } from "vue-router";
-import { useHorseStore } from "../stores/use-horseData";
 import HomeView from "../views/HomeView.vue";
 
 const routes = [
@@ -24,9 +23,10 @@ const router = createRouter({
   routes,
 });
 
+import store from "../stores/horseStore";
+
 router.beforeEach((to, __, next) => {
-  const horseStore = useHorseStore();
-  if (to.name === "Play" && horseStore.currentRound === 0) {
+  if (to.name === "Play" && store.state.currentRound === 0) {
     // Must have a race schedule before going to play
     next({ name: "Home" });
   } else {

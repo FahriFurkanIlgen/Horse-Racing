@@ -1,19 +1,18 @@
 <script setup>
 import { ref, watch, onMounted } from "vue";
-import { useHorseStore } from "../../stores/use-horseData";
+import { useStore } from "vuex";
 
-const horseStore = useHorseStore();
+const store = useStore();
 const props = defineProps(["horse", "start"]);
 
 const horse = ref(props.horse);
-
 const horseAnimate = ref(); // ref for the horse animation
 
 // const raceAudio = new Audio(race)
 
 const stopwatch = () => {
   const timer = setInterval(() => {
-    if (horse.value.position < horseStore.finishFlagDistance) {
+    if (horse.value.position < store.state.finishFlagDistance) {
       // if the horse is not at the finish line
       horse.value.stopwatch.milliseconds++;
       if (horse.value.stopwatch.milliseconds === 100) {
@@ -32,30 +31,32 @@ const stopwatch = () => {
 
 const move = () => {
   horseAnimate.value.style.left =
-    (horse.value.position / horseStore.finishFlagDistance) * 100 - 1 + "%";
+    (horse.value.position / store.state.finishFlagDistance) * 100 - 1 + "%";
   horse.value.position += horse.value.speed;
   const timer = setTimeout(() => {
-    if (horse.value.position < horseStore.finishFlagDistance) {
+    if (horse.value.position < store.state.finishFlagDistance) {
       move();
       return;
     }
     clearTimeout(timer);
-    horse.value.position = horseStore.finishFlagDistance;
+    horse.value.position = store.state.finishFlagDistance;
     horseAnimate.value.style.left =
-      (horse.value.position / horseStore.finishFlagDistance) * 100 - 1 + "%";
-    horseStore.setRaceStart(false);
-    horseStore.setSortHorse(horse.value);
-    if (horseStore.sortHorses.length === horseStore.currentRoundHorses.length) {
-      const results = horseStore.sortHorses
+      (horse.value.position / store.state.finishFlagDistance) * 100 - 1 + "%";
+    store.dispatch("setRaceStart", false);
+    store.dispatch("setSortHorse", horse.value);
+    if (
+      store.state.sortHorses.length === store.getters.currentRoundHorses.length
+    ) {
+      const results = store.state.sortHorses
         .slice()
         .sort((a, b) => a.position - b.position);
-      horseStore.finishRound(results);
+      store.dispatch("finishRound", results);
     }
   }, 100);
 };
 
 watch(
-  () => horseStore.getisRaceStarted,
+  () => store.getters.getisRaceStarted,
   (newVal) => {
     if (newVal) {
       move();
@@ -65,7 +66,7 @@ watch(
 );
 
 onMounted(() => {
-  if (horseStore.getisRaceStarted) {
+  if (store.getters.getisRaceStarted) {
     move();
     stopwatch();
   }

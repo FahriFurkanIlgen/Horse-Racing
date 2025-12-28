@@ -1,6 +1,8 @@
 <script setup>
-import { useHorseStore } from "../../stores/use-horseData";
-const horseStore = useHorseStore();
+import { computed } from "vue";
+import { useStore } from "vuex";
+const store = useStore();
+const currentRoundHorses = computed(() => store.getters.currentRoundHorses);
 </script>
 
 <template>
@@ -11,7 +13,7 @@ const horseStore = useHorseStore();
           <th>Horse</th>
           <th>Name</th>
         </tr>
-        <tr v-for="horse in horseStore.currentRoundHorses" :key="horse.id">
+        <tr v-for="horse in currentRoundHorses" :key="horse.id">
           <td>
             <div
               :style="{

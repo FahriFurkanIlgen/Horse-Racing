@@ -1,26 +1,26 @@
 <script setup>
 import { watchEffect, onMounted } from "vue";
-import { useHorseStore } from "../../stores/use-horseData";
+import { useStore } from "vuex";
 
-const horseStore = useHorseStore();
+const store = useStore();
 
 watchEffect(() => {
-  if (horseStore.getCountdownActive) {
-    horseStore.setRaceStart(true);
-    horseStore.setCountdownActive(false);
+  if (store.getters.getCountdownActive) {
+    store.dispatch("setRaceStart", true);
+    store.dispatch("setCountdownActive", false);
   }
 });
 
 onMounted(() => {
-  if (horseStore.getCountdownActive) {
-    horseStore.setRaceStart(true);
-    horseStore.setCountdownActive(false);
+  if (store.getters.getCountdownActive) {
+    store.dispatch("setRaceStart", true);
+    store.dispatch("setCountdownActive", false);
   }
 });
 </script>
 
 <template>
-  <div v-if="horseStore.getCountdownActive" class="modal">
+  <div v-if="store.getters.getCountdownActive" class="modal">
     <div class="modal__layer"></div>
     <div class="modal__content">
       <h1>Race Starting!</h1>

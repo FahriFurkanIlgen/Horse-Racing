@@ -1,20 +1,20 @@
 <script setup>
 import { computed } from "vue";
-import { useHorseStore } from "../../stores/use-horseData";
+import { useStore } from "vuex";
 import SidebarScore from "./SidebarScoreboard.vue";
 
-const horseStore = useHorseStore();
+const store = useStore();
+const currentRound = computed(() => store.state.currentRound);
+const raceSchedule = computed(() => store.state.raceSchedule);
 </script>
 
 <template>
   <div class="sidebar">
     <div class="sidebar__header">
-      <h1 class="sidebar__header--title">
-        Round {{ horseStore.currentRound }}
-      </h1>
-      <p class="sidebar__header--place" v-if="horseStore.currentRound > 0">
+      <h1 class="sidebar__header--title">Round {{ currentRound }}</h1>
+      <p class="sidebar__header--place" v-if="currentRound > 0">
         Length:
-        {{ horseStore.raceSchedule[horseStore.currentRound - 1]?.length }}m
+        {{ raceSchedule[currentRound - 1]?.length }}m
       </p>
     </div>
     <div class="sidebar__content">
